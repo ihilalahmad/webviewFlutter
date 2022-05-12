@@ -25,63 +25,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  late WebViewController webViewController;
-  double webViewProgress = 0;
-
+  late WebViewController _webViewController;
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        if(await webViewController.canGoBack()){
-          webViewController.goBack();
-          return false;
-        }else{
-          return true;
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Aymakan-drivers'),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () async {
-                if (await webViewController.canGoBack()) {
-                  webViewController.goBack();
-                }
-              },
-            ),
-            IconButton(
-              onPressed: () => webViewController.reload(),
-              icon: Icon(Icons.refresh),
-            )
-          ],
-        ),
-        body: Column(
-          children: [
-            webViewProgress < 1 ? SizedBox(
-              height: 3,
-              child: LinearProgressIndicator(
-                value: webViewProgress,
-                color: Colors.red,
-                backgroundColor: Colors.black,
-              ),
-            ) : SizedBox(),
-            Expanded(
-              child: WebView(
-                javascriptMode: JavascriptMode.unrestricted,
-                initialUrl: 'https://dev-click.aymakan.com.sa',
-                onWebViewCreated: (controller) {
-                  this.webViewController = controller;
-                },
-                onPageStarted: (url) {
-                  print('New url: $url');
-                },
-                onProgress: (progress) => setState(() => this.webViewProgress = progress / 100),
-              ),
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('WebviewApp'),
+      ),
+      body: WillPopScope(
+        onWillPop: () async {
+          if(await _webViewController.canGoBack()) {
+            _webViewController.goBack();
+            return false;
+          }else {
+            return true;
+          }
+        },
+        child: WebView(
+          initialUrl: 'https://codingzest.com/',
+          javascriptMode: JavascriptMode.unrestricted,
+
+          onWebViewCreated: (WebViewController webViewController) {
+            _webViewController = webViewController;
+          },
         ),
       ),
     );
